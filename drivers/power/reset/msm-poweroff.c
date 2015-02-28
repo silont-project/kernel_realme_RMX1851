@@ -323,6 +323,10 @@ static void msm_restart_prepare(const char *cmd)
 	}
 #endif /* VENDOR_EDIT */
 
+#ifdef CONFIG_QCOM_PRESERVE_MEM
+	need_warm_reset = true;
+#endif
+
 	if (force_warm_reboot)
 		pr_info("Forcing a warm reset of the system\n");
 
