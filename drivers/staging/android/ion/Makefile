@@ -13,6 +13,7 @@ obj-$(CONFIG_ION_HISI) += hisilicon/
 
 obj-$(CONFIG_ION_MSM) += msm/
 
-# TODO: remove me b/62057517
+#TODO: remove me b/62058353
+# WE SHOULD FIX THIS ONE
 subdir-ccflags-y += \
-	-Wno-constant-logical-operand
+	-Wno-enum-conversion

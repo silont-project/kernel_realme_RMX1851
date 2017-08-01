@@ -17,6 +17,8 @@ endif
 
 obj-$(CONFIG_DEBUG_BUS_VOTER) += msm_bus_dbg_voter.o
 
-# TODO: remove me b/62057517
+# TODO: remove me b/62058353
 subdir-ccflags-y += \
-	-Wno-self-assign
+	-Wno-self-assign \
+	-Wno-parentheses-equality
+
