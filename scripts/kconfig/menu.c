@@ -662,7 +662,7 @@ static void get_symbol_str(struct gstr *r, struct symbol *sym,
 		str_append(r, "\n");
 	if (sym->rev_dep.expr) {
 		str_append(r, _("  Selected by: "));
-		expr_gstr_print(sym->rev_dep.expr, r);
+		expr_gstr_print_revdep(sym->rev_dep.expr, r);
 		str_append(r, "\n");
 	}
 	str_append(r, "\n\n");
