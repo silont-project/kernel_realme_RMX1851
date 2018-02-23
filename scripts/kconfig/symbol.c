@@ -414,9 +414,10 @@ void sym_calc_value(struct symbol *sym)
 			if (!sym_is_choice(sym)) {
 				prop = sym_get_default_prop(sym);
 				if (prop) {
-					sym->flags |= SYMBOL_WRITE;
 					newval.tri = EXPR_AND(expr_calc_value(prop->expr),
 							      prop->visible.tri);
+					if (newval.tri != no)
+						sym->flags |= SYMBOL_WRITE;
 				}
 			}
 		calc_newval:
