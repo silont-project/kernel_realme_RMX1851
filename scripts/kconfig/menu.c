@@ -661,9 +661,9 @@ static void get_symbol_str(struct gstr *r, struct symbol *sym,
 	if (hit)
 		str_append(r, "\n");
 	if (sym->rev_dep.expr) {
-		str_append(r, _("  Selected by: "));
-		str_append(r, "\n");
-		expr_gstr_print_revdep(sym->rev_dep.expr, r);
+		expr_gstr_print_revdep(sym->rev_dep.expr, r, yes, "  Selected by [y]:\n");
+		expr_gstr_print_revdep(sym->rev_dep.expr, r, mod, "  Selected by [m]:\n");
+		expr_gstr_print_revdep(sym->rev_dep.expr, r, no, "  Selected by [n]:\n");
 	}
 	str_append(r, "\n\n");
 }
