@@ -16,7 +16,6 @@
 #include <linux/of.h>
 #include <linux/of_device.h>
 #include <linux/delay.h>
-#include <linux/input.h>
 #include <linux/io.h>
 #include <soc/qcom/scm.h>
 
@@ -429,9 +428,7 @@ static void adreno_pwr_on_work(struct work_struct *work)
 	struct kgsl_device *device = KGSL_DEVICE(adreno_dev);
 
 	mutex_lock(&device->mutex);
-
 	kgsl_pwrctrl_change_state(device, KGSL_STATE_ACTIVE);
-
 	mutex_unlock(&device->mutex);
 }
 
@@ -891,7 +888,6 @@ static void adreno_of_get_initial_pwrlevel(struct adreno_device *adreno_dev,
 		init_level = 1;
 
 	pwr->active_pwrlevel = init_level;
-	pwr->default_pwrlevel = init_level;
 }
 
 static int adreno_of_get_legacy_pwrlevels(struct adreno_device *adreno_dev,
@@ -1309,7 +1305,6 @@ static int adreno_probe(struct platform_device *pdev)
 			PTR_ERR(adreno_dev->gpuhtw_llc_slice));
 		adreno_dev->gpuhtw_llc_slice = NULL;
 	}
-
 out:
 	if (status) {
 		adreno_ringbuffer_close(adreno_dev);
