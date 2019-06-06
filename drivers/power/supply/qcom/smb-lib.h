@@ -79,6 +79,7 @@ enum print_reason {
 /* Jianchao.Shi@BSP.CHG.Basic, 2018/01/30, sjc Add for using gpio as CC detect */
 #define CCDETECT_VOTER			"CCDETECT_VOTER"
 #endif
+#define CHARGER_MODE_VOTER		"CHARGER_MODE_VOTER"
 #define FG_ESR_VOTER			"FG_ESR_VOTER"
 #define FCC_STEPPER_VOTER		"FCC_STEPPER_VOTER"
 #define PD_NOT_SUPPORTED_VOTER		"PD_NOT_SUPPORTED_VOTER"
