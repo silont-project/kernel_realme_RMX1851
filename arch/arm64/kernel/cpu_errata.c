@@ -485,28 +485,91 @@ const struct arm64_cpu_capabilities arm64_errata[] = {
 		.def_scope = SCOPE_LOCAL_CPU,
 		.enable = cpu_enable_trap_ctr_access,
 	},
+#ifdef CONFIG_QCOM_FALKOR_ERRATUM_1003
+	{
+		.desc = "Qualcomm Technologies Falkor erratum 1003",
+		.capability = ARM64_WORKAROUND_QCOM_FALKOR_E1003,
+		MIDR_RANGE(MIDR_QCOM_FALKOR_V1,
+			   MIDR_CPU_VAR_REV(0, 0),
+			   MIDR_CPU_VAR_REV(0, 0)),
+	},
+	{
+		.desc = "Qualcomm Technologies Kryo erratum 1003",
+		.capability = ARM64_WORKAROUND_QCOM_FALKOR_E1003,
+		.def_scope = SCOPE_LOCAL_CPU,
+		.midr_model = MIDR_QCOM_KRYO,
+		.matches = is_kryo_midr,
+	},
+#endif
+#ifdef CONFIG_QCOM_FALKOR_ERRATUM_1009
+	{
+		.desc = "Qualcomm Technologies Falkor erratum 1009",
+		.capability = ARM64_WORKAROUND_REPEAT_TLBI,
+		MIDR_RANGE(MIDR_QCOM_FALKOR_V1,
+			   MIDR_CPU_VAR_REV(0, 0),
+			   MIDR_CPU_VAR_REV(0, 0)),
+	},
+#endif
+#ifdef CONFIG_ARM64_ERRATUM_1286807
+	{
+	/* Cortex-A75 r0p0 to r3p0 */
+		.desc = "ARM erratum 1286807",
+		.capability = ARM64_WORKAROUND_REPEAT_TLBI,
+		MIDR_RANGE(MIDR_CORTEX_A75,
+			   MIDR_CPU_VAR_REV(0, 0),
+			   MIDR_CPU_VAR_REV(3, 0)),
+	},
+	{
+		.desc = "ARM erratum 1286807",
+		.capability = ARM64_WORKAROUND_REPEAT_TLBI,
+		MIDR_RANGE(MIDR_KRYO4G,
+			   MIDR_CPU_VAR_REV(12, 14),
+			   MIDR_CPU_VAR_REV(13, 14)),
+	},
+	{
+	/* Cortex-A75 r0p0 to r3p0 */
+		.desc = "ARM erratum 1286807",
+		.capability = ARM64_WORKAROUND_REPEAT_TLBI,
+		MIDR_RANGE(MIDR_CORTEX_A75,
+			   MIDR_CPU_VAR_REV(0, 0),
+			   MIDR_CPU_VAR_REV(3, 0)),
+	},
+#endif
+#ifdef CONFIG_ARM64_ERRATUM_858921
+	{
+	/* Cortex-A73 all versions */
+		.desc = "ARM erratum 858921",
+		.capability = ARM64_WORKAROUND_858921,
+		MIDR_ALL_VERSIONS(MIDR_CORTEX_A73),
+	},
+#endif
 #ifdef CONFIG_HARDEN_BRANCH_PREDICTOR
 	{
+		.desc = "Spectre variant 2",
 		.capability = ARM64_HARDEN_BRANCH_PREDICTOR,
 		MIDR_ALL_VERSIONS(MIDR_CORTEX_A57),
 		.enable = enable_smccc_arch_workaround_1,
 	},
 	{
+		.desc = "Spectre variant 2",
 		.capability = ARM64_HARDEN_BRANCH_PREDICTOR,
 		MIDR_ALL_VERSIONS(MIDR_CORTEX_A72),
 		.enable = enable_smccc_arch_workaround_1,
 	},
 	{
+		.desc = "Spectre variant 2",
 		.capability = ARM64_HARDEN_BRANCH_PREDICTOR,
 		MIDR_ALL_VERSIONS(MIDR_CORTEX_A73),
 		.enable = enable_smccc_arch_workaround_1,
 	},
 	{
+		.desc = "Spectre variant 2",
 		.capability = ARM64_HARDEN_BRANCH_PREDICTOR,
 		MIDR_ALL_VERSIONS(MIDR_CORTEX_A75),
 		.enable = enable_smccc_arch_workaround_1,
 	},
 	{
+		.desc = "Spectre variant 2",
 		.capability = ARM64_HARDEN_BRANCH_PREDICTOR,
 		MIDR_ALL_VERSIONS(MIDR_KRYO3G),
 #ifdef CONFIG_PSCI_BP_HARDENING
@@ -514,8 +577,16 @@ const struct arm64_cpu_capabilities arm64_errata[] = {
 #else
 		.enable = enable_smccc_arch_workaround_1,
 #endif
+		MIDR_ALL_VERSIONS(MIDR_QCOM_FALKOR_V1),
+		.enable = qcom_enable_link_stack_sanitization,
 	},
 	{
+		.desc = "Spectre variant 4",
+		.capability = ARM64_HARDEN_BP_POST_GUEST_EXIT,
+		MIDR_ALL_VERSIONS(MIDR_QCOM_FALKOR_V1),
+	},
+	{
+		.desc = "Spectre variant 2",
 		.capability = ARM64_HARDEN_BRANCH_PREDICTOR,
 		MIDR_ALL_VERSIONS(MIDR_KRYO2XX_GOLD),
 #ifdef CONFIG_PSCI_BP_HARDENING
@@ -523,15 +594,32 @@ const struct arm64_cpu_capabilities arm64_errata[] = {
 #else
 		.enable = enable_smccc_arch_workaround_1,
 #endif
+		MIDR_ALL_VERSIONS(MIDR_QCOM_FALKOR),
+		.enable = qcom_enable_link_stack_sanitization,
 	},
 	{
+		.desc = "Spectre variant 4",
+		.capability = ARM64_HARDEN_BP_POST_GUEST_EXIT,
+		MIDR_ALL_VERSIONS(MIDR_QCOM_FALKOR),
+	},
+	{
+		.desc = "Spectre variant 2",
 		.capability = ARM64_HARDEN_BRANCH_PREDICTOR,
 		MIDR_ALL_VERSIONS(MIDR_BRCM_VULCAN),
 		.enable = enable_smccc_arch_workaround_1,
 	},
 	{
+		.desc = "Spectre variant 2",
 		.capability = ARM64_HARDEN_BRANCH_PREDICTOR,
 		MIDR_ALL_VERSIONS(MIDR_CAVIUM_THUNDERX2),
+		.enable = enable_smccc_arch_workaround_1,
+	},
+	{
+		.desc = "Spectre variant 2",
+		.capability = ARM64_HARDEN_BRANCH_PREDICTOR,
+		MIDR_RANGE(MIDR_KRYO4G,
+			   MIDR_CPU_VAR_REV(12, 14),
+			   MIDR_CPU_VAR_REV(13, 14)),
 		.enable = enable_smccc_arch_workaround_1,
 	},
 #endif
