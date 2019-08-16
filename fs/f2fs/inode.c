@@ -693,7 +693,6 @@ retry:
 
 	if (err) {
 		f2fs_update_inode_page(inode);
-		if (dquot_initialize_needed(inode))
 			set_sbi_flag(sbi, SBI_QUOTA_NEED_REPAIR);
 	}
 	sb_end_intwrite(inode->i_sb);
