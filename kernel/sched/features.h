@@ -107,4 +107,13 @@ SCHED_FEAT(FBT_STRICT_ORDER, false)
  * ON: schedtune.prefer_idle is replaced with need_idle
  * OFF: schedtune.prefer_idle is honored as is.
  */
-SCHED_FEAT(EAS_USE_NEED_IDLE, true)
+SCHED_FEAT(EAS_USE_NEED_IDLE, false)
+
+/*
+ * If the sync flag is set but ignored, prefer to
+ * select cpu in the same cluster as current. So
+ * if current is a big cpu and sync is set, indicate
+ * that the selection algorithm for a boosted task
+ * should be used.
+ */
+SCHED_FEAT(SYNC_BOOST, true)
