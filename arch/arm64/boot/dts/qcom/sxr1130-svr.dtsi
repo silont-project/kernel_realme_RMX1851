@@ -504,31 +504,3 @@
 &dsi_dual_xrsmrtvwr_jdi_video_display {
 	qcom,dsi-display-active;
 };
-
-&pm660_charger {
-	qcom,ufp-only-mode;
-};
-
-&dai_mi2s3 {
-	qcom,msm-mi2s-rx-lines = <0>;
-	qcom,msm-mi2s-tx-lines = <1>;
-
-};
-
-&cdc_pdm_gpios {
-	status = "disabled";
-};
-
-&lcdb_ldo_vreg {
-	regulator-min-microvolt = <5700000>;
-	regulator-max-microvolt = <5700000>;
-};
-
-&lcdb_ncp_vreg {
-	regulator-min-microvolt = <5700000>;
-	regulator-max-microvolt = <5700000>;
-};
-
-&pm660_pdphy {
-	qcom,sxr1130-sxr-dp-sink;
-};
