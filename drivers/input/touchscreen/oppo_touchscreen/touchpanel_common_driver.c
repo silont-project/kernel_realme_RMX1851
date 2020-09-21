@@ -470,6 +470,10 @@ static void tp_gesture_handle(struct touchpanel_data *ts)
         if(ts->geature_ignore)
             return;
 #endif
+        input_report_key(ts->input_dev, KEY_F4, 1);
+        input_sync(ts->input_dev);
+        input_report_key(ts->input_dev, KEY_F4, 0);
+        input_sync(ts->input_dev);
         input_report_key(ts->input_dev, key, 1);
         input_sync(ts->input_dev);
         input_report_key(ts->input_dev, key, 0);
