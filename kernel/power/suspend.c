@@ -731,7 +731,7 @@ static int enter_state(suspend_state_t state)
 	pm_restore_gfp_mask();
 #ifdef VENDOR_EDIT
 //Nanwei.Deng@BSP.CHG.Basic 2018/05/03 modify for power debug
-    pr_info("%s suspend_devices_and_enter end\n", __func__);
+    pr_debug("%s suspend_devices_and_enter end\n", __func__);
 #endif /* VENDOR_EDIT */
 
  Finish:
@@ -751,11 +751,11 @@ static void pm_suspend_marker(char *annotation)
 	rtc_time_to_tm(ts.tv_sec, &tm);
 #ifndef VENDOR_EDIT
 //Nanwei.Deng@BSP.CHG.Basic 2018/05/03 modify for power debug
-    pr_info("PM: suspend %s %d-%02d-%02d %02d:%02d:%02d.%09lu UTC\n",
+    pr_debug("PM: suspend %s %d-%02d-%02d %02d:%02d:%02d.%09lu UTC\n",
         annotation, tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,
         tm.tm_hour, tm.tm_min, tm.tm_sec, ts.tv_nsec);
 #else
-    pr_err("PM: suspend %s %d-%02d-%02d %02d:%02d:%02d.%09lu UTC\n",
+    pr_debug("PM: suspend %s %d-%02d-%02d %02d:%02d:%02d.%09lu UTC\n",
         annotation, tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,
         tm.tm_hour, tm.tm_min, tm.tm_sec, ts.tv_nsec);
 #endif /* VENDOR_EDIT */
