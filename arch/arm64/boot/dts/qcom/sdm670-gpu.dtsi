@@ -570,10 +570,10 @@
 				/* MIN SVS */
 				qcom,gpu-pwrlevel@4 {
 					reg = <4>;
-					qcom,gpu-freq = <180000000>;
-					qcom,bus-freq = <4>;
-					qcom,bus-min = <3>;
-					qcom,bus-max = <4>;
+					qcom,gpu-freq = <160000000>;
+					qcom,bus-freq = <3>;
+					qcom,bus-min = <2>;
+					qcom,bus-max = <3>;
 				};
 
 				/* XO */
