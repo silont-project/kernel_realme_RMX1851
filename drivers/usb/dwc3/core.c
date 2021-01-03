@@ -1363,6 +1363,10 @@ static int dwc3_probe(struct platform_device *pdev)
 		goto err_core_init;
 	}
 
+        dwc->dwc_ipc_log_ctxt = ipc_log_context_create(NUM_LOG_PAGES,
+                                        dev_name(dwc->dev), 0);
+        if (!dwc->dwc_ipc_log_ctxt)
+                dev_err(dwc->dev, "Error getting ipc_log_ctxt\n");
 err5:
 	dwc3_event_buffers_cleanup(dwc);
 
