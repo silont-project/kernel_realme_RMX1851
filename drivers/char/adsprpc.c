@@ -1212,6 +1212,7 @@ static int context_alloc(struct fastrpc_file *fl, uint32_t kernel,
 	struct smq_invoke_ctx *ctx = NULL;
 	struct fastrpc_ctx_lst *clst = &fl->clst;
 	struct fastrpc_ioctl_invoke *invoke = &invokefd->inv;
+	unsigned long irq_flags = 0;
 
 	bufs = REMOTE_SCALARS_LENGTH(invoke->sc);
 	size = bufs * sizeof(*ctx->lpra) + bufs * sizeof(*ctx->maps) +
@@ -1273,7 +1274,7 @@ static int context_alloc(struct fastrpc_file *fl, uint32_t kernel,
 	hlist_add_head(&ctx->hn, &clst->pending);
 	spin_unlock(&fl->hlock);
 
-	spin_lock(&me->ctxlock);
+	spin_lock_irqsave(&me->ctxlock, irq_flags);
 	for (ii = 0; ii < FASTRPC_CTX_MAX; ii++) {
 		if (!me->ctxtable[ii]) {
 			me->ctxtable[ii] = ctx;
@@ -1281,7 +1282,7 @@ static int context_alloc(struct fastrpc_file *fl, uint32_t kernel,
 			break;
 		}
 	}
-	spin_unlock(&me->ctxlock);
+	spin_unlock_irqrestore(&me->ctxlock, irq_flags);
 	VERIFY(err, ii < FASTRPC_CTX_MAX);
 	if (err) {
 		pr_err("adsprpc: out of context memory\n");
@@ -1311,6 +1312,9 @@ static void context_free(struct smq_invoke_ctx *ctx)
 	struct fastrpc_apps *me = &gfa;
 	int nbufs = REMOTE_SCALARS_INBUFS(ctx->sc) +
 		    REMOTE_SCALARS_OUTBUFS(ctx->sc);
+	unsigned long irq_flags = 0;
+	void *handle = NULL;
+	const void *ptr = NULL;
 	spin_lock(&ctx->fl->hlock);
 	hlist_del_init(&ctx->hn);
 	spin_unlock(&ctx->fl->hlock);
@@ -1324,14 +1328,20 @@ static void context_free(struct smq_invoke_ctx *ctx)
 	ctx->magic = 0;
 	ctx->ctxid = 0;
 
-	spin_lock(&me->ctxlock);
+	spin_lock_irqsave(&me->ctxlock, irq_flags);
 	for (i = 0; i < FASTRPC_CTX_MAX; i++) {
 		if (me->ctxtable[i] == ctx) {
+			handle = me->ctxtable[i]->handle;
+			ptr = me->ctxtable[i]->ptr;
 			me->ctxtable[i] = NULL;
 			break;
 		}
 	}
-	spin_unlock(&me->ctxlock);
+	spin_unlock_irqrestore(&me->ctxlock, irq_flags);
+	if (handle) {
+		glink_rx_done(handle, ptr, true);
+		handle = NULL;
+	}
 
 	kfree(ctx);
 }
@@ -2112,10 +2122,6 @@ static int fastrpc_internal_invoke(struct fastrpc_file *fl, uint32_t mode,
 	if (err)
 		goto bail;
  bail:
-	if (ctx && ctx->handle) {
-		glink_rx_done(ctx->handle, ctx->ptr, true);
-		ctx->handle = NULL;
-	}
 	if (ctx && interrupted == -ERESTARTSYS)
 		context_save_interrupted(ctx);
 	else if (ctx)
@@ -2940,6 +2946,7 @@ static void fastrpc_glink_notify_rx(void *handle, const void *priv,
 	struct fastrpc_apps *me = &gfa;
 	uint32_t index;
 	int err = 0;
+	unsigned long irq_flags = 0;
 
 	VERIFY(err, (rsp && size >= sizeof(*rsp)));
 	if (err)
@@ -2954,13 +2961,16 @@ static void fastrpc_glink_notify_rx(void *handle, const void *priv,
 	if (err)
 		goto bail;
 
+	spin_lock_irqsave(&me->ctxlock, irq_flags);
 	VERIFY(err, ((me->ctxtable[index]->ctxid == (rsp->ctx & ~3)) &&
 		me->ctxtable[index]->magic == FASTRPC_CTX_MAGIC));
-	if (err)
+	if (err) {
+		spin_unlock_irqrestore(&me->ctxlock, irq_flags);
 		goto bail;
-
+	}
 	me->ctxtable[index]->handle = handle;
 	me->ctxtable[index]->ptr = ptr;
+	spin_unlock_irqrestore(&me->ctxlock, irq_flags);
 
 	context_notify_user(me->ctxtable[index], rsp->retval);
 bail:
