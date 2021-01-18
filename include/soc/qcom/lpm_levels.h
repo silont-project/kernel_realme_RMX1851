@@ -20,5 +20,7 @@ struct system_pm_ops {
 	bool (*sleep_allowed)(void);
 };
 
+extern void msm_cpuidle_set_sleep_disable(bool disable);
+
 uint32_t register_system_pm_ops(struct system_pm_ops *pm_ops);
 #endif
