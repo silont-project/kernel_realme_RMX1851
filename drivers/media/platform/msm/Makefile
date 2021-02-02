@@ -16,6 +16,6 @@ obj-y += broadcast/
 obj-$(CONFIG_DVB_MPQ) += dvb/
 obj-$(CONFIG_QCA402X) += qca402/
 
-# TODO: remove me b/62058353
+# TODO: remove me b/62057517
 subdir-ccflags-y += \
 	-Wno-parentheses-equality
