@@ -7,7 +7,3 @@ obj-$(CONFIG_POWER_SUPPLY)	+= supply/
 
 #ifdef VENDOR_EDIT
 obj-$(CONFIG_OPPO_SDM670Q_CHARGER) += oppo/
-
-# TODO: remove me b/62057517
-subdir-ccflags-y += \
-	-Wno-tentative-definition-incomplete-type

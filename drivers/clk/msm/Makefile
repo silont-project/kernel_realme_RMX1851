@@ -39,6 +39,3 @@ endif
 
 obj-y				+= mdss/
 
-# TODO: remove me b/62057517
-subdir-ccflags-y += \
-	-Wno-literal-conversion
