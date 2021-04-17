@@ -25,15 +25,3 @@
 	/delete-property/qcom,soc-hw-rev-efuse;
 	/delete-node/qcom,soc-hw-revisions;
 };
-
-/* sdm670.dtsi */
-&clock_cpucc {
-	qcom,cpufreq-table-0 =
-		<1612800>,
-		<1708800>;
-
-	qcom,cpufreq-table-6 =
-		<979200>,
-		<1843200>,
-		<2208000>;
-};
